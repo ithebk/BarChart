@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.ithebk.barchartsample.MainActivity">
+    tools:context="me.ithebk.barchartsample.MainActivity">
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <com.ithebk.barchart.BarChart
+    <me.ithebk.barchart.BarChart
         barchart:orientation="1"
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
 
 
 
-    <com.ithebk.barchart.BarChart
+    <me.ithebk.barchart.BarChart
         android:layout_marginTop="10dp"
         barchart:orientation="0"
         android:padding="30dp"

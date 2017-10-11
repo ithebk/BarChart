@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
     defaultConfig {
-        applicationId "com.ithebk.barchartsample"
+        applicationId "me.ithebk.barchartsample"
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
