@@ -55,7 +55,13 @@ public class MainActivity extends AppCompatActivity {
         barChartVertical.setOnBarClickListener(new BarChart.OnBarClickListener() {
             @Override
             public void onBarClick(BarChartModel barChartModel) {
-                System.out.println(barChartModel+"Clicked:::+"+barChartModel.getBarValue());
+                barChartVertical.removeBar(barChartModel);
+            }
+        });
+        barChartHorizontal.setOnBarClickListener(new BarChart.OnBarClickListener() {
+            @Override
+            public void onBarClick(BarChartModel barChartModel) {
+                barChartHorizontal.removeBar(barChartModel);
             }
         });
     }

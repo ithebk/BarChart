@@ -7,6 +7,14 @@
     android:orientation="vertical"
     tools:context="me.ithebk.barchartsample.MainActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:padding="4dp"
+        android:background="@color/colorPrimary"
+        android:text="tap on bar to remove!!"
+        />
     <HorizontalScrollView
         android:padding="10dp"
         android:layout_width="match_parent"

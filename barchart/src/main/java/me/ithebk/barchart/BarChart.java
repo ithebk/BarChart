@@ -1,5 +1,6 @@
 package me.ithebk.barchart;
 
+import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -39,6 +41,8 @@ public class BarChart extends FrameLayout {
     private boolean isShowBarValue = true;
     private boolean isShowAnimation = true;
     private OnBarClickListener onBarClickListener;
+
+    private List<BarChartModel> barChartModels = new ArrayList<>();
 
     public BarChart(Context context) {
         super(context);
@@ -95,6 +99,7 @@ public class BarChart extends FrameLayout {
     }
 
     public void addBar(final BarChartModel barChartModel) {
+        barChartModels.add(barChartModel);
         if (barChartModel != null) {
             if (barType == BarChartUtils.BAR_CHART_HORIZONTAL) {
                 //Horizontal bar
@@ -124,6 +129,27 @@ public class BarChart extends FrameLayout {
 
         }
     }
+    public void removeBar(BarChartModel barChartModel){
+        barChartModels.remove(barChartModel);
+        removeBarInternal(barChartModel);
+    }
+
+    public void removeBar(int index){
+        if(index<barChartModels.size()) {
+            BarChartModel barChartModel= barChartModels.remove(index);
+            removeBarInternal(barChartModel);
+        }
+
+    }
+    private void removeBarInternal(BarChartModel barChartModel){
+        if (barType == BarChartUtils.BAR_CHART_HORIZONTAL) {
+            horizontalLinearParent.removeView(horizontalLinearParent.findViewWithTag(barChartModel));
+        }
+        else {
+            verticalLinearParent.removeView(verticalLinearParent.findViewWithTag(barChartModel));
+
+        }
+    }
 
 
     private void initHorizontalChart() {
@@ -132,6 +158,9 @@ public class BarChart extends FrameLayout {
         horizontalLinearParent.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         horizontalLinearParent.setGravity(Gravity.LEFT | Gravity.START);
+        if(isShowAnimation){
+            horizontalLinearParent.setLayoutTransition(new LayoutTransition());
+        }
         this.addView(horizontalLinearParent);
     }
 
@@ -141,6 +170,9 @@ public class BarChart extends FrameLayout {
         verticalLinearParent.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         verticalLinearParent.setGravity(Gravity.BOTTOM);
+        if(isShowAnimation){
+            verticalLinearParent.setLayoutTransition(new LayoutTransition());
+        }
         this.addView(verticalLinearParent);
     }
 
@@ -204,9 +236,8 @@ public class BarChart extends FrameLayout {
                 }
             }
         });
+        view.setTag(barChartModel);
         horizontalLinearParent.addView(view);
-
-
         isBarAdded = true;
 
     }
@@ -265,6 +296,7 @@ public class BarChart extends FrameLayout {
                 }
             }
         });
+        view.setTag(barChartModel);
         verticalLinearParent.addView(view);
         isBarAdded = true;
 
