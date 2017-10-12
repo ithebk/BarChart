@@ -37,6 +37,7 @@ public class BarChart extends FrameLayout {
     private LinearLayout verticalLinearParent;
     private boolean isVerticalBarAdded =false;
     private boolean isShowBarValue = true;
+    private boolean isShowAnimation =true;
     private OnBarClickListener onBarClickListener;
 
     public BarChart(Context context) {
@@ -65,6 +66,7 @@ public class BarChart extends FrameLayout {
                 (int) BarChartUtils.convertDpToPixel(BarChartUtils.BAR_CHART_SPACE, context));
 
         isShowBarValue = a.getBoolean(R.styleable.BarChart_bar_show_value,true);
+        isShowAnimation = a.getBoolean(R.styleable.BarChart_bar_show_animation,true);
 
 
         a.recycle();
@@ -213,7 +215,12 @@ public class BarChart extends FrameLayout {
                     }
 
                 });
-                anim.setDuration(500);
+                if(isShowAnimation) {
+                    anim.setDuration(500);
+                }
+                else {
+                    anim.setDuration(0);
+                }
                 anim.start();
 
                 view.setOnClickListener(new OnClickListener() {

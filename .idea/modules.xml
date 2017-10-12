@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BarChartSample.iml" filepath="$PROJECT_DIR$/BarChartSample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/barchart/barchart.iml" filepath="$PROJECT_DIR$/barchart/barchart.iml" />
+      <module fileurl="file://$PROJECT_DIR$/barchartsample/barchartsample.iml" filepath="$PROJECT_DIR$/barchartsample/barchartsample.iml" />
     </modules>
   </component>
 </project>

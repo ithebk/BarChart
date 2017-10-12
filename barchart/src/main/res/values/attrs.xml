@@ -13,6 +13,7 @@
         <attr name="bar_max_value" format="integer"/>
         <attr name="bar_spaces" format="dimension"/>
         <attr name="bar_show_value" format="boolean"/>
+        <attr name="bar_show_animation" format="boolean"/>
 
     </declare-styleable>
 

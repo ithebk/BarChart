@@ -23,6 +23,7 @@
         barchart:bar_max_value="100"
         barchart:bar_spaces = "0dp"
         barchart:bar_show_value="true"
+        barchart:bar_show_animation="true"
         android:layout_width="wrap_content"
         android:layout_height="150dp"/>
 
