@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 
@@ -29,15 +29,15 @@ public class BarChart extends FrameLayout {
     private int barTextColor;
     private Context context;
     private int barType;
-    private int barWidth;
+    private int barDimension;
     private int barTextSize;
     private int barColor;
     private boolean showAutoColorBar;
     private int barMaxValue;
-    private LinearLayout verticalLinearParent;
-    private boolean isVerticalBarAdded =false;
+    private LinearLayout verticalLinearParent, horizontalLinearParent;
+    private boolean isBarAdded = false;
     private boolean isShowBarValue = true;
-    private boolean isShowAnimation =true;
+    private boolean isShowAnimation = true;
     private OnBarClickListener onBarClickListener;
 
     public BarChart(Context context) {
@@ -50,7 +50,7 @@ public class BarChart extends FrameLayout {
         this.context = context;
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BarChart, 0, 0);
         barType = a.getInt(R.styleable.BarChart_bar_type, BarChartUtils.BAR_CHART_VERTICAL);
-        barWidth = a.getDimensionPixelSize(R.styleable.BarChart_bar_width,
+        barDimension = a.getDimensionPixelSize(R.styleable.BarChart_bar_width,
                 (int) BarChartUtils.convertDpToPixel(20, context));
         barColor = a.getColor(R.styleable.BarChart_bar_color, BarChartUtils.BAR_CHART_COLOR_DEFAULT);
         barTextSize = a.getDimensionPixelSize(R.styleable.BarChart_bar_text_size,
@@ -65,8 +65,8 @@ public class BarChart extends FrameLayout {
         barSpaces = a.getDimensionPixelSize(R.styleable.BarChart_bar_spaces,
                 (int) BarChartUtils.convertDpToPixel(BarChartUtils.BAR_CHART_SPACE, context));
 
-        isShowBarValue = a.getBoolean(R.styleable.BarChart_bar_show_value,true);
-        isShowAnimation = a.getBoolean(R.styleable.BarChart_bar_show_animation,true);
+        isShowBarValue = a.getBoolean(R.styleable.BarChart_bar_show_value, true);
+        isShowAnimation = a.getBoolean(R.styleable.BarChart_bar_show_animation, true);
 
 
         a.recycle();
@@ -79,38 +79,46 @@ public class BarChart extends FrameLayout {
      */
     private void init() {
         if (barType == BarChartUtils.BAR_CHART_HORIZONTAL) {
-            createHorizontalChart();
+            initHorizontalChart();
         } else {
             initVerticalChart();
 
         }
     }
 
-    public void addBar(List<BarChartModel> barChartModelList){
-        for(BarChartModel barChartModel : barChartModelList){
-            if(barChartModel!=null) {
-               addBar(barChartModel);}
-
+    public void addBar(List<BarChartModel> barChartModelList) {
+        for (BarChartModel barChartModel : barChartModelList) {
+            if (barChartModel != null) {
+                addBar(barChartModel);
             }
+        }
     }
 
-    public void addBar(final BarChartModel barChartModel){
-        System.out.println("Clicked Inside addBar");
-        System.out.println("Linear Layout Bar::"+verticalLinearParent.getHeight());
-        if(barChartModel!=null) {
+    public void addBar(final BarChartModel barChartModel) {
+        if (barChartModel != null) {
             if (barType == BarChartUtils.BAR_CHART_HORIZONTAL) {
-                // createHorizontalChart();
-            } else {
-                if(verticalLinearParent.getHeight()==0){
-                    getDimension(true,verticalLinearParent, new DimensionReceivedCallback() {
+                //Horizontal bar
+                if (horizontalLinearParent.getHeight() == 0) {
+                    getDimension(false, horizontalLinearParent, new DimensionReceivedCallback() {
                         @Override
                         public void onDimensionReceived(int dimension) {
-                            createVerticalChart(dimension,barChartModel);
+                            createHorizontalChart(dimension, barChartModel);
                         }
                     });
+                } else {
+                    createHorizontalChart(horizontalLinearParent.getWidth(), barChartModel);
                 }
-                else {
-                        createVerticalChart(verticalLinearParent.getHeight(),barChartModel);
+            } else {
+
+                if (verticalLinearParent.getHeight() == 0) {
+                    getDimension(true, verticalLinearParent, new DimensionReceivedCallback() {
+                        @Override
+                        public void onDimensionReceived(int dimension) {
+                            createVerticalChart(dimension, barChartModel);
+                        }
+                    });
+                } else {
+                    createVerticalChart(verticalLinearParent.getHeight(), barChartModel);
                 }
             }
 
@@ -118,44 +126,13 @@ public class BarChart extends FrameLayout {
     }
 
 
-    private void createHorizontalChart() {
-        final ScrollView verticalScrollView = new ScrollView(context);
-        verticalScrollView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+    private void initHorizontalChart() {
+        horizontalLinearParent = new LinearLayout(context);
+        horizontalLinearParent.setOrientation(LinearLayout.VERTICAL);
+        horizontalLinearParent.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        final LinearLayout linearLayoutParent = new LinearLayout(context);
-        linearLayoutParent.setOrientation(LinearLayout.VERTICAL);
-        linearLayoutParent.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        linearLayoutParent.setBackgroundColor(Color.parseColor("#EEEEEE"));
-        linearLayoutParent.setGravity(Gravity.LEFT | Gravity.START);
-        getDimension(false, verticalScrollView, new DimensionReceivedCallback() {
-            @Override
-            public void onDimensionReceived(int dimension) {
-                System.out.println("Max Height:" + dimension);
-                if (dimension > 0) {
-                    for (int i = 0; i < 10; i++) {
-                        int width = new Random().nextInt(dimension);
-                        System.out.println("width::" + width);
-                        LinearLayout linearLayout = new LinearLayout(context);
-                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width,
-                                100);
-                        if (i > 0) {
-                            layoutParams.topMargin = 40;
-                        }
-
-                        linearLayout.setBackgroundColor(Color.BLACK);
-                        linearLayout.setLayoutParams(layoutParams);
-                        linearLayoutParent.addView(linearLayout);
-                    }
-                }
-            }
-        });
-
-
-        verticalScrollView.addView(linearLayoutParent);
-        this.addView(verticalScrollView);
-
-
+        horizontalLinearParent.setGravity(Gravity.LEFT | Gravity.START);
+        this.addView(horizontalLinearParent);
     }
 
     private void initVerticalChart() {
@@ -167,80 +144,133 @@ public class BarChart extends FrameLayout {
         this.addView(verticalLinearParent);
     }
 
-    private void createVerticalChart(int dimension,final BarChartModel barChartModel) {
-        System.out.println("Clicked Inside addBarVertical");
 
-                System.out.println("Max Height:" + dimension);
-                int barVal = new Random().nextInt(barMaxValue);
+    private void createHorizontalChart(int dimension, final BarChartModel barChartModel) {
+        if (barMaxValue == 0) {
+            return;
+        }
+        int dimensionBar = dimension * barChartModel.getBarValue() / barMaxValue;
 
-                int dimensionBar = dimension * barVal / barMaxValue;
+        View view = LayoutInflater.from(context).inflate(R.layout.bar_horizontal, horizontalLinearParent, false);
 
-                View view = LayoutInflater.from(context).inflate(R.layout.bar, verticalLinearParent, false);
+        if (barChartModel.getBarColor() != 0) {
+            view.findViewById(R.id.linear_bar).setBackgroundColor(barChartModel.getBarColor());
+        } else if (showAutoColorBar) {
+            view.findViewById(R.id.linear_bar).setBackgroundColor(BarChartUtils.getRandomColor());
+        } else {
+            view.findViewById(R.id.linear_bar).setBackgroundColor(barColor);
+        }
 
-                if (barChartModel.getBarColor() != 0) {
-                    view.findViewById(R.id.linear_bar).setBackgroundColor(barChartModel.getBarColor());
-                } else if (showAutoColorBar) {
-                    Random rnd = new Random();
-                    int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-                    view.findViewById(R.id.linear_bar).setBackgroundColor(color);
-                } else {
-                    view.findViewById(R.id.linear_bar).setBackgroundColor(barColor);
+        view.getLayoutParams().height = barDimension;
+        if (isShowBarValue) {
+            TextView textView = view.findViewById(R.id.tv_bar);
+            textView.setText(String.format(Locale.getDefault(), "%d", barChartModel.getBarValue()));
+            textView.setTextSize(barTextSize);
+            textView.setTextColor(barTextColor);
+        } else {
+            view.findViewById(R.id.tv_bar).setVisibility(GONE);
+        }
+        MarginLayoutParams layoutParamsBar = (MarginLayoutParams) view.getLayoutParams();
+        if (isBarAdded) {
+            layoutParamsBar.topMargin = barSpaces;
+        }
+        final LinearLayout linearLayoutBar = view.findViewById(R.id.linear_bar);
+
+
+        ValueAnimator anim = ValueAnimator.ofInt(0, dimensionBar);
+
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = linearLayoutBar.getLayoutParams();
+                layoutParams.width = val;
+                linearLayoutBar.setLayoutParams(layoutParams);
+            }
+
+        });
+        if (isShowAnimation) {
+            anim.setDuration(500);
+        } else {
+            anim.setDuration(0);
+        }
+        anim.start();
+
+        view.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onBarClickListener != null) {
+                    onBarClickListener.onBarClick(barChartModel);
                 }
+            }
+        });
+        horizontalLinearParent.addView(view);
 
-                view.getLayoutParams().width = barWidth;
-                if(isShowBarValue) {
-                    TextView textView = view.findViewById(R.id.tv_bar);
-                    textView.setText(barVal + "");
-                    textView.setTextSize(barTextSize);
-                    textView.setTextColor(barTextColor);
-                }else {
-                    view.findViewById(R.id.tv_bar).setVisibility(GONE);
+
+        isBarAdded = true;
+
+    }
+
+    private void createVerticalChart(int dimension, final BarChartModel barChartModel) {
+        if(dimension==0){return;}
+        int dimensionBar = dimension * barChartModel.getBarValue() / barMaxValue;
+
+        View view = LayoutInflater.from(context).inflate(R.layout.bar_vertical, verticalLinearParent, false);
+
+        if (barChartModel.getBarColor() != 0) {
+            view.findViewById(R.id.linear_bar).setBackgroundColor(barChartModel.getBarColor());
+        } else if (showAutoColorBar) {
+            view.findViewById(R.id.linear_bar).setBackgroundColor(BarChartUtils.getRandomColor());
+        } else {
+            view.findViewById(R.id.linear_bar).setBackgroundColor(barColor);
+        }
+
+        view.getLayoutParams().width = barDimension;
+        if (isShowBarValue) {
+            TextView textView = view.findViewById(R.id.tv_bar);
+            textView.setText(String.format(Locale.getDefault(), "%d", barChartModel.getBarValue()));
+            textView.setTextSize(barTextSize);
+            textView.setTextColor(barTextColor);
+        } else {
+            view.findViewById(R.id.tv_bar).setVisibility(GONE);
+        }
+        MarginLayoutParams layoutParamsBar = (MarginLayoutParams) view.getLayoutParams();
+        if (isBarAdded) {
+            layoutParamsBar.leftMargin = barSpaces;
+        }
+        final LinearLayout linearLayoutBar = view.findViewById(R.id.linear_bar);
+        ValueAnimator anim = ValueAnimator.ofInt(0, dimensionBar);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = linearLayoutBar.getLayoutParams();
+                layoutParams.height = val;
+                linearLayoutBar.setLayoutParams(layoutParams);
+            }
+
+        });
+        if (isShowAnimation) {
+            anim.setDuration(500);
+        } else {
+            anim.setDuration(0);
+        }
+        anim.start();
+
+        view.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onBarClickListener != null) {
+                    onBarClickListener.onBarClick(barChartModel);
                 }
-                MarginLayoutParams layoutParamsBar = (MarginLayoutParams) view.getLayoutParams();
-                if (isVerticalBarAdded) {
-                    layoutParamsBar.leftMargin = barSpaces;
-                }
-                final LinearLayout linearLayoutBar = view.findViewById(R.id.linear_bar);
-
-
-                ValueAnimator anim = ValueAnimator.ofInt(0, dimensionBar);
-
-                anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        int val = (Integer) valueAnimator.getAnimatedValue();
-                        ViewGroup.LayoutParams layoutParams = linearLayoutBar.getLayoutParams();
-                        layoutParams.height = val;
-                        linearLayoutBar.setLayoutParams(layoutParams);
-                    }
-
-                });
-                if(isShowAnimation) {
-                    anim.setDuration(500);
-                }
-                else {
-                    anim.setDuration(0);
-                }
-                anim.start();
-
-                view.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(onBarClickListener!=null){
-                            onBarClickListener.onBarClick();
-                        }
-                    }
-                });
-                verticalLinearParent.addView(view);
-                verticalLinearParent.invalidate();
-
-
-        isVerticalBarAdded =true;
+            }
+        });
+        verticalLinearParent.addView(view);
+        isBarAdded = true;
 
     }
 
     private void getDimension(final boolean isHeightRequested, final View view, final DimensionReceivedCallback listener) {
-        System.out.println("Got the dimesion request");
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -265,11 +295,11 @@ public class BarChart extends FrameLayout {
     }
 
 
-
     private interface DimensionReceivedCallback {
         void onDimensionReceived(int dimension);
     }
-    public interface OnBarClickListener{
-        void onBarClick();
+
+    public interface OnBarClickListener {
+        void onBarClick(BarChartModel barChartModel);
     }
 }

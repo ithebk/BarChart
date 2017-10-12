@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 
+import java.util.Random;
+
 /**
  * Created by bharath on 9/10/17.
  */
@@ -35,5 +37,10 @@ public class BarChartUtils {
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return px / ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
 
+    }
+
+    public static int getRandomColor() {
+        Random rnd = new Random();
+        return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
     }
 }

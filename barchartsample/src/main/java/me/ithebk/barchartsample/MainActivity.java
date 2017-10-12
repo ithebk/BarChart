@@ -12,11 +12,13 @@ import me.ithebk.barchart.BarChartModel;
 
 public class MainActivity extends AppCompatActivity {
     private BarChart barChartVertical;
+    private BarChart barChartHorizontal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         barChartVertical = (BarChart) findViewById(R.id.bar_chart_vertical);
+        barChartHorizontal = (BarChart) findViewById(R.id.bar_chart_horizontal);
         for (int i = 0; i < 3; i++) {
             BarChartModel barChartModel = new BarChartModel();
             barChartModel.setBarValue(new Random().nextInt(100));
@@ -24,6 +26,15 @@ public class MainActivity extends AppCompatActivity {
             barChartModel.setBarColor(Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256)));
             barChartModel.setBarTag(null);
             barChartVertical.addBar(barChartModel);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            BarChartModel barChartModel = new BarChartModel();
+            barChartModel.setBarValue(new Random().nextInt(100));
+            Random rnd = new Random();
+            barChartModel.setBarColor(Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256)));
+            barChartModel.setBarTag(null);
+            barChartHorizontal.addBar(barChartModel);
         }
 
 
@@ -37,13 +48,14 @@ public class MainActivity extends AppCompatActivity {
                 barChartModel.setBarColor(Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256)));
                 barChartModel.setBarTag(null);
                 barChartVertical.addBar(barChartModel);
+                barChartHorizontal.addBar(barChartModel);
             }
         });
 
         barChartVertical.setOnBarClickListener(new BarChart.OnBarClickListener() {
             @Override
-            public void onBarClick() {
-                System.out.println("Clicked:::+");
+            public void onBarClick(BarChartModel barChartModel) {
+                System.out.println(barChartModel+"Clicked:::+"+barChartModel.getBarValue());
             }
         });
     }
