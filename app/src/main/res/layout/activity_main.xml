@@ -8,14 +8,23 @@
     tools:context="me.ithebk.barchartsample.MainActivity">
 
     <HorizontalScrollView
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     <me.ithebk.barchart.BarChart
-        barchart:orientation="1"
-        android:layout_margin="10dp"
+        android:id="@+id/bar_chart_vertical"
+        barchart:bar_type="vertical"
+        barchart:bar_width="20dp"
+        barchart:bar_color="@color/colorPrimary"
+        barchart:bar_text_color="#808080"
+        barchart:bar_text_size="10sp"
+        barchart:bar_show_auto_color="false"
+        barchart:bar_max_value="100"
+        barchart:bar_spaces = "0dp"
+        barchart:bar_show_value="true"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"/>
+        android:layout_height="150dp"/>
 
     </HorizontalScrollView>
 
@@ -23,10 +32,17 @@
 
     <me.ithebk.barchart.BarChart
         android:layout_marginTop="10dp"
-        barchart:orientation="0"
+        barchart:bar_type="horizontal"
         android:padding="30dp"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <Button
+        android:layout_gravity="center"
+        android:id="@+id/tv_hello"
+        android:text="Add View"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

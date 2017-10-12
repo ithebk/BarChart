@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="BarChart">
-        <attr name="orientation"  format="integer" />
+        <attr name="bar_type" format="enum">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+        <attr name="bar_color" format="color"/>
+        <attr name="bar_width" format="dimension"/>
+        <attr name="bar_text_size" format="dimension"/>
+        <attr name="bar_text_color" format="color"/>
+        <attr name="bar_show_auto_color" format="boolean"/>
+        <attr name="bar_max_value" format="integer"/>
+        <attr name="bar_spaces" format="dimension"/>
+        <attr name="bar_show_value" format="boolean"/>
+
     </declare-styleable>
+
+
 </resources>
