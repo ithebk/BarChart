@@ -4,7 +4,6 @@ import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 
 /**
@@ -77,6 +75,17 @@ public class BarChart extends FrameLayout {
         init();
     }
 
+    public List<BarChartModel> getBar() {
+        return barChartModels;
+    }
+
+    public BarChartModel getBar(int index){
+        if(index<barChartModels.size()){
+            return barChartModels.get(index);
+        }
+        return null;
+    }
+
     /**
      *
      *
@@ -90,75 +99,13 @@ public class BarChart extends FrameLayout {
         }
     }
 
-    public void addBar(List<BarChartModel> barChartModelList) {
-        for (BarChartModel barChartModel : barChartModelList) {
-            if (barChartModel != null) {
-                addBar(barChartModel);
-            }
-        }
-    }
-
-    public void addBar(final BarChartModel barChartModel) {
-        barChartModels.add(barChartModel);
-        if (barChartModel != null) {
-            if (barType == BarChartUtils.BAR_CHART_HORIZONTAL) {
-                //Horizontal bar
-                if (horizontalLinearParent.getHeight() == 0) {
-                    getDimension(false, horizontalLinearParent, new DimensionReceivedCallback() {
-                        @Override
-                        public void onDimensionReceived(int dimension) {
-                            createHorizontalChart(dimension, barChartModel);
-                        }
-                    });
-                } else {
-                    createHorizontalChart(horizontalLinearParent.getWidth(), barChartModel);
-                }
-            } else {
-
-                if (verticalLinearParent.getHeight() == 0) {
-                    getDimension(true, verticalLinearParent, new DimensionReceivedCallback() {
-                        @Override
-                        public void onDimensionReceived(int dimension) {
-                            createVerticalChart(dimension, barChartModel);
-                        }
-                    });
-                } else {
-                    createVerticalChart(verticalLinearParent.getHeight(), barChartModel);
-                }
-            }
-
-        }
-    }
-    public void removeBar(BarChartModel barChartModel){
-        barChartModels.remove(barChartModel);
-        removeBarInternal(barChartModel);
-    }
-
-    public void removeBar(int index){
-        if(index<barChartModels.size()) {
-            BarChartModel barChartModel= barChartModels.remove(index);
-            removeBarInternal(barChartModel);
-        }
-
-    }
-    private void removeBarInternal(BarChartModel barChartModel){
-        if (barType == BarChartUtils.BAR_CHART_HORIZONTAL) {
-            horizontalLinearParent.removeView(horizontalLinearParent.findViewWithTag(barChartModel));
-        }
-        else {
-            verticalLinearParent.removeView(verticalLinearParent.findViewWithTag(barChartModel));
-
-        }
-    }
-
-
     private void initHorizontalChart() {
         horizontalLinearParent = new LinearLayout(context);
         horizontalLinearParent.setOrientation(LinearLayout.VERTICAL);
         horizontalLinearParent.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         horizontalLinearParent.setGravity(Gravity.LEFT | Gravity.START);
-        if(isShowAnimation){
+        if (isShowAnimation) {
             horizontalLinearParent.setLayoutTransition(new LayoutTransition());
         }
         this.addView(horizontalLinearParent);
@@ -170,21 +117,49 @@ public class BarChart extends FrameLayout {
         verticalLinearParent.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         verticalLinearParent.setGravity(Gravity.BOTTOM);
-        if(isShowAnimation){
+        if (isShowAnimation) {
             verticalLinearParent.setLayoutTransition(new LayoutTransition());
         }
         this.addView(verticalLinearParent);
     }
 
-
-    private void createHorizontalChart(int dimension, final BarChartModel barChartModel) {
-        if (barMaxValue == 0) {
+    /**
+     * @param position
+     * @param dimension
+     * @param barChartModel
+     */
+    private void createHorizontalChart(int position, int dimension, final BarChartModel barChartModel) {
+        if (dimension == 0 || barMaxValue == 0) {
             return;
         }
-        int dimensionBar = dimension * barChartModel.getBarValue() / barMaxValue;
-
         View view = LayoutInflater.from(context).inflate(R.layout.bar_horizontal, horizontalLinearParent, false);
+        updateUi(position, dimension, null, barChartModel, view);
 
+    }
+
+    /**
+     * @param position
+     * @param dimension
+     * @param barChartModel
+     */
+    private void createVerticalChart(int position, int dimension, final BarChartModel barChartModel) {
+        if (dimension == 0 || barMaxValue == 0) {
+            return;
+        }
+        View view = LayoutInflater.from(context).inflate(R.layout.bar_vertical, verticalLinearParent, false);
+        updateUi(position, dimension, null, barChartModel, view);
+    }
+
+    /**
+     * @param position
+     * @param dimension
+     * @param barChartModelInit
+     * @param barChartModel
+     * @param view
+     */
+    private void updateUi(int position, int dimension, BarChartModel barChartModelInit,
+                          final BarChartModel barChartModel,
+                          View view) {
         if (barChartModel.getBarColor() != 0) {
             view.findViewById(R.id.linear_bar).setBackgroundColor(barChartModel.getBarColor());
         } else if (showAutoColorBar) {
@@ -192,71 +167,11 @@ public class BarChart extends FrameLayout {
         } else {
             view.findViewById(R.id.linear_bar).setBackgroundColor(barColor);
         }
-
-        view.getLayoutParams().height = barDimension;
-        if (isShowBarValue) {
-            TextView textView = view.findViewById(R.id.tv_bar);
-            textView.setText(String.format(Locale.getDefault(), "%d", barChartModel.getBarValue()));
-            textView.setTextSize(barTextSize);
-            textView.setTextColor(barTextColor);
-        } else {
-            view.findViewById(R.id.tv_bar).setVisibility(GONE);
-        }
-        MarginLayoutParams layoutParamsBar = (MarginLayoutParams) view.getLayoutParams();
-        if (isBarAdded) {
-            layoutParamsBar.topMargin = barSpaces;
-        }
-        final LinearLayout linearLayoutBar = view.findViewById(R.id.linear_bar);
-
-
-        ValueAnimator anim = ValueAnimator.ofInt(0, dimensionBar);
-
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = linearLayoutBar.getLayoutParams();
-                layoutParams.width = val;
-                linearLayoutBar.setLayoutParams(layoutParams);
-            }
-
-        });
-        if (isShowAnimation) {
-            anim.setDuration(500);
-        } else {
-            anim.setDuration(0);
-        }
-        anim.start();
-
-        view.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (onBarClickListener != null) {
-                    onBarClickListener.onBarClick(barChartModel);
-                }
-            }
-        });
-        view.setTag(barChartModel);
-        horizontalLinearParent.addView(view);
-        isBarAdded = true;
-
-    }
-
-    private void createVerticalChart(int dimension, final BarChartModel barChartModel) {
-        if(dimension==0){return;}
         int dimensionBar = dimension * barChartModel.getBarValue() / barMaxValue;
 
-        View view = LayoutInflater.from(context).inflate(R.layout.bar_vertical, verticalLinearParent, false);
+        MarginLayoutParams layoutParamsBar = (MarginLayoutParams) view.getLayoutParams();
 
-        if (barChartModel.getBarColor() != 0) {
-            view.findViewById(R.id.linear_bar).setBackgroundColor(barChartModel.getBarColor());
-        } else if (showAutoColorBar) {
-            view.findViewById(R.id.linear_bar).setBackgroundColor(BarChartUtils.getRandomColor());
-        } else {
-            view.findViewById(R.id.linear_bar).setBackgroundColor(barColor);
-        }
 
-        view.getLayoutParams().width = barDimension;
         if (isShowBarValue) {
             TextView textView = view.findViewById(R.id.tv_bar);
             textView.setText(String.format(Locale.getDefault(), "%d", barChartModel.getBarValue()));
@@ -265,18 +180,21 @@ public class BarChart extends FrameLayout {
         } else {
             view.findViewById(R.id.tv_bar).setVisibility(GONE);
         }
-        MarginLayoutParams layoutParamsBar = (MarginLayoutParams) view.getLayoutParams();
-        if (isBarAdded) {
-            layoutParamsBar.leftMargin = barSpaces;
-        }
+
+
         final LinearLayout linearLayoutBar = view.findViewById(R.id.linear_bar);
-        ValueAnimator anim = ValueAnimator.ofInt(0, dimensionBar);
+        ValueAnimator anim = ValueAnimator.ofInt(barChartModelInit == null ?
+                0 : dimension * barChartModelInit.getBarValue() / barMaxValue, dimensionBar);
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 int val = (Integer) valueAnimator.getAnimatedValue();
                 ViewGroup.LayoutParams layoutParams = linearLayoutBar.getLayoutParams();
-                layoutParams.height = val;
+                if (barType == BarChartUtils.BAR_CHART_VERTICAL) {
+                    layoutParams.height = val;
+                } else {
+                    layoutParams.width = val;
+                }
                 linearLayoutBar.setLayoutParams(layoutParams);
             }
 
@@ -287,7 +205,6 @@ public class BarChart extends FrameLayout {
             anim.setDuration(0);
         }
         anim.start();
-
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -297,11 +214,77 @@ public class BarChart extends FrameLayout {
             }
         });
         view.setTag(barChartModel);
-        verticalLinearParent.addView(view);
-        isBarAdded = true;
+        if (barType == BarChartUtils.BAR_CHART_VERTICAL) {
+            view.getLayoutParams().width = barDimension;
+            if (barChartModelInit == null) {
+                if (isBarAdded) {
+                    layoutParamsBar.leftMargin = barSpaces;
+                }
+                if (position == -1) {
+                    verticalLinearParent.addView(view);
+                } else if (position <= verticalLinearParent.getChildCount()) {
+                    verticalLinearParent.addView(view, position);
+                }
+            }
+        } else {
+            view.getLayoutParams().height = barDimension;
+            if (barChartModelInit == null) {
+                if (isBarAdded) {
+                    layoutParamsBar.topMargin = barSpaces;
+                }
+                if (position == -1) {
+                    horizontalLinearParent.addView(view);
+                } else if (position <= horizontalLinearParent.getChildCount()) {
+                    horizontalLinearParent.addView(view, position);
+                }
+            }
 
+
+        }
+        isBarAdded = true;
     }
 
+
+
+    /**
+     * @param dimension
+     * @param barChartModelInit
+     * @param barChartModel
+     */
+    private void updateHorizontalChart(int dimension, BarChartModel barChartModelInit,
+                                       final BarChartModel barChartModel) {
+        View view = horizontalLinearParent.findViewWithTag(barChartModelInit);
+        updateUi(-1, dimension, barChartModelInit, barChartModel, view);
+    }
+
+    /**
+     * @param dimension
+     * @param barChartModelInit
+     * @param barChartModel
+     */
+    private void updateVerticalChart(int dimension, BarChartModel barChartModelInit, final BarChartModel barChartModel) {
+        View view = verticalLinearParent.findViewWithTag(barChartModelInit);
+        updateUi(-1, dimension, barChartModelInit, barChartModel, view);
+    }
+
+
+    /**
+     * @param barChartModel
+     */
+    private void removeBarInternal(BarChartModel barChartModel) {
+        if (barType == BarChartUtils.BAR_CHART_HORIZONTAL) {
+            horizontalLinearParent.removeView(horizontalLinearParent.findViewWithTag(barChartModel));
+        } else {
+            verticalLinearParent.removeView(verticalLinearParent.findViewWithTag(barChartModel));
+
+        }
+    }
+
+    /**
+     * @param isHeightRequested
+     * @param view
+     * @param listener
+     */
     private void getDimension(final boolean isHeightRequested, final View view, final DimensionReceivedCallback listener) {
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -322,8 +305,140 @@ public class BarChart extends FrameLayout {
         });
     }
 
+
+    /**
+     * @param onBarClickListener
+     */
     public void setOnBarClickListener(OnBarClickListener onBarClickListener) {
         this.onBarClickListener = onBarClickListener;
+    }
+
+
+    /**
+     * @param barChartModelList
+     */
+    public void addBar(List<BarChartModel> barChartModelList) {
+        for (BarChartModel barChartModel : barChartModelList) {
+            if (barChartModel != null) {
+                addBar(barChartModels.size(), barChartModel);
+            }
+        }
+    }
+
+    /**
+     * @param barChartModel
+     */
+    public void addBar(final BarChartModel barChartModel) {
+        addBar(barChartModels.size(), barChartModel);
+    }
+
+    /**
+     * @param position
+     * @param barChartModel
+     */
+    public void addBar(final int position, final BarChartModel barChartModel) {
+        if (position > barChartModels.size()) {
+            return;
+        }
+        barChartModels.add(position, barChartModel);
+        if (barChartModel != null) {
+            if (barType == BarChartUtils.BAR_CHART_HORIZONTAL) {
+                //Horizontal bar
+                if (horizontalLinearParent.getHeight() == 0) {
+                    getDimension(false, horizontalLinearParent, new DimensionReceivedCallback() {
+                        @Override
+                        public void onDimensionReceived(int dimension) {
+                            createHorizontalChart(position, dimension, barChartModel);
+                        }
+                    });
+                } else {
+                    createHorizontalChart(position, horizontalLinearParent.getWidth(), barChartModel);
+                }
+            } else {
+
+                if (verticalLinearParent.getHeight() == 0) {
+                    getDimension(true, verticalLinearParent, new DimensionReceivedCallback() {
+                        @Override
+                        public void onDimensionReceived(int dimension) {
+                            createVerticalChart(position, dimension, barChartModel);
+                        }
+                    });
+                } else {
+                    createVerticalChart(position, verticalLinearParent.getHeight(), barChartModel);
+                }
+            }
+
+        }
+    }
+
+    /**
+     * @param index
+     * @param barChartModel
+     */
+    public void updateBar(final int index, final BarChartModel barChartModel) {
+        if (index >= barChartModels.size() || barChartModel == null) {
+            return;
+        }
+        final BarChartModel barChartModelInit = barChartModels.get(index);
+        barChartModels.set(index, barChartModel);
+
+        if (barType == BarChartUtils.BAR_CHART_HORIZONTAL) {
+            //Horizontal bar
+            if (horizontalLinearParent.getHeight() == 0) {
+                getDimension(false, horizontalLinearParent, new DimensionReceivedCallback() {
+                    @Override
+                    public void onDimensionReceived(int dimension) {
+                        updateHorizontalChart(dimension, barChartModelInit, barChartModel);
+                    }
+                });
+            } else {
+                updateHorizontalChart(horizontalLinearParent.getWidth(), barChartModelInit, barChartModel);
+            }
+        } else {
+
+            if (verticalLinearParent.getHeight() == 0) {
+                getDimension(true, verticalLinearParent, new DimensionReceivedCallback() {
+                    @Override
+                    public void onDimensionReceived(int dimension) {
+                        updateVerticalChart(dimension, barChartModelInit, barChartModel);
+                    }
+                });
+            } else {
+                updateVerticalChart(verticalLinearParent.getHeight(), barChartModelInit, barChartModel);
+            }
+        }
+
+    }
+
+    /**
+     * @param barChartModel
+     */
+    public void removeBar(BarChartModel barChartModel) {
+        barChartModels.remove(barChartModel);
+        removeBarInternal(barChartModel);
+    }
+
+    /**
+     * @param index
+     */
+    public void removeBar(int index) {
+        if (index < barChartModels.size()) {
+            BarChartModel barChartModel = barChartModels.remove(index);
+            removeBarInternal(barChartModel);
+            System.out.println("barChart Val:" + barChartModel.getBarValue());
+            System.out.println("barChart Val Index:" + index);
+        }
+
+    }
+
+    public void clearAll() {
+        barChartModels.clear();
+        if (verticalLinearParent != null) {
+            verticalLinearParent.removeAllViews();
+        }
+        if (horizontalLinearParent != null) {
+            horizontalLinearParent.removeAllViews();
+        }
     }
 
 
