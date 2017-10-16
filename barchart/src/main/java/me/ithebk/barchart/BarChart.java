@@ -174,7 +174,13 @@ public class BarChart extends FrameLayout {
 
         if (isShowBarValue) {
             TextView textView = view.findViewById(R.id.tv_bar);
-            textView.setText(String.format(Locale.getDefault(), "%d", barChartModel.getBarValue()));
+            if(barChartModel.getBarText()!=null){
+                textView.setText(String.format(Locale.getDefault(), "%s", barChartModel.getBarText()));
+
+            }
+            else {
+                textView.setText(String.format(Locale.getDefault(), "%d", barChartModel.getBarValue()));
+            }
             textView.setTextSize(barTextSize);
             textView.setTextColor(barTextColor);
         } else {

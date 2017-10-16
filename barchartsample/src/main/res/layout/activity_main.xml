@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#303030"
     tools:context="me.ithebk.barchartsample.MainActivity">
 
     <TextView
@@ -43,7 +42,6 @@
             android:layout_gravity="center"
             android:id="@+id/et_add_view_at"
             android:text="1"
-            android:textColor="#FFF"
             android:inputType="number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -71,7 +69,6 @@
             android:layout_gravity="center"
             android:id="@+id/et_remove_bar_at"
             android:text="1"
-            android:textColor="#FFF"
             android:inputType="number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -88,7 +85,6 @@
             android:layout_gravity="center"
             android:id="@+id/et_update_bar_at"
             android:text="1"
-            android:textColor="#FFF"
             android:inputType="number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -140,9 +136,9 @@
         android:id="@+id/bar_chart_horizontal"
         barchart:bar_type="horizontal"
         barchart:bar_max_value="100"
-        barchart:bar_width="11dp"
+        barchart:bar_width="20dp"
         barchart:bar_spaces="0dp"
-        barchart:bar_show_value="false"
+        barchart:bar_show_value="true"
         android:visibility="visible"
         android:layout_width="300dp"
         android:layout_height="wrap_content"/>

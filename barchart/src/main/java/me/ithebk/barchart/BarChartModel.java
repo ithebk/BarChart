@@ -8,12 +8,25 @@ public class BarChartModel {
     private int barValue;
     private int barColor;
     private Object barTag;
+    private String barText;
 
+    BarChartModel(int barValue, int barColor) {
+        this.barValue = barValue;
+        this.barColor = barColor;
+    }
     BarChartModel(int barValue, int barColor, Object barTag) {
         this.barValue = barValue;
         this.barColor = barColor;
         this.barTag = barTag;
     }
+    BarChartModel(int barValue, int barColor,String barText, Object barTag) {
+        this.barValue = barValue;
+        this.barColor = barColor;
+        this.barTag = barTag;
+        this.barText =barText;
+    }
+
+
 
     public BarChartModel() {
 
@@ -41,5 +54,13 @@ public class BarChartModel {
 
     public void setBarTag(Object barTag) {
         this.barTag = barTag;
+    }
+
+    public String getBarText() {
+        return barText;
+    }
+
+    public void setBarText(String barText) {
+        this.barText = barText;
     }
 }

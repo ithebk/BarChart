@@ -34,13 +34,22 @@ public class MainActivity extends AppCompatActivity {
             barChartModel.setBarTag(null);
             barChartVertical.addBar(barChartModel);
         }
-
-        for (int i = 0; i < 3; i++) {
+        String data[] = new String[]{"Java",
+                "Python",
+                "JavaScript",
+                "C"};
+        int dataColor[] = new int[]{
+                Color.parseColor("#00BCD4"),
+                Color.parseColor("#3F51B5"),
+                Color.parseColor("#2196F3"),
+                Color.parseColor("#FF9800")};
+        for (int i = 0; i < 4; i++) {
             BarChartModel barChartModel = new BarChartModel();
             barChartModel.setBarValue(new Random().nextInt(100));
             Random rnd = new Random();
-            barChartModel.setBarColor(Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256)));
+            barChartModel.setBarColor(dataColor[i]);
             barChartModel.setBarTag(null);
+            barChartModel.setBarText(data[i]);
             barChartHorizontal.addBar(barChartModel);
         }
 
@@ -69,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 barChartModel.setBarColor(Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256)));
                 barChartModel.setBarTag(null);
                 barChartVertical.addBar(Integer.parseInt(etAddViewAt.getText().toString()),barChartModel);
-                barChartHorizontal.addBar(Integer.parseInt(etAddViewAt.getText().toString()),barChartModel);
+               // barChartHorizontal.addBar(Integer.parseInt(etAddViewAt.getText().toString()),barChartModel);
             }
         });
         findViewById(R.id.tv_clear).setOnClickListener(new View.OnClickListener() {
@@ -97,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 barChartModel.setBarColor(Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256)));
                 barChartModel.setBarTag(null);
                 barChartVertical.updateBar(Integer.parseInt(etUpdateViewAt.getText().toString()),barChartModel);
-                barChartHorizontal.updateBar(Integer.parseInt(etUpdateViewAt.getText().toString()),barChartModel);
+              //  barChartHorizontal.updateBar(Integer.parseInt(etUpdateViewAt.getText().toString()),barChartModel);
             }});
 
         barChartVertical.setOnBarClickListener(new BarChart.OnBarClickListener() {
