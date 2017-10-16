@@ -3,6 +3,7 @@
 The BarChart is an customized bar-chart library for android. It provides vertical and horizontal chart
 
 Developers can customize the following attributes in xml:
+          
      <me.ithebk.barchart.BarChart
         android:id="@+id/bar_chart_vertical"
         barchart:bar_type="vertical"
@@ -17,6 +18,7 @@ Developers can customize the following attributes in xml:
         barchart:bar_show_animation="true"
         android:layout_width="wrap_content"
         android:layout_height="150dp"/>
+             
 Supported on API Level 10 and above.
 
 
