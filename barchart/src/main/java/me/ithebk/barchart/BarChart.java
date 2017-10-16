@@ -86,6 +86,20 @@ public class BarChart extends FrameLayout {
         return null;
     }
 
+    public int getBarMaxValue() {
+        return barMaxValue;
+    }
+
+    /**
+     * Should be called first step only,
+     * onCalling it will clears the all the data
+     * @param barMaxValue
+     */
+    public void setBarMaxValue(int barMaxValue) {
+        this.barMaxValue = barMaxValue;
+        clearAll();
+    }
+
     /**
      *
      *
