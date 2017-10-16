@@ -9,6 +9,8 @@
 .externalNativeBuild
 # Built application files
 *.ap_
+private_key_sender.asc
+public_key_sender.asc
 
 # Files for the ART/Dalvik VM
 *.dex
