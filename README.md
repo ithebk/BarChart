@@ -1,7 +1,23 @@
 # BarChart
+[ ![Download](https://api.bintray.com/packages/ithebk/maven/Bar-Chart/images/download.svg) ](https://bintray.com/ithebk/maven/Bar-Chart/_latestVersion)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+<br/>The BarChart is an customized chart library for android. It provides vertical and horizontal bar chart.<br/>
+<img src="/screenshot/barchartsample.gif" width="300" height="466">
+<br/>Supported on API Level 10 and above.
+## Installation
+Add jcenter repository to build.gradle in Project Level
+	
+	repositories {
+		jcenter()
+	}
 
-The BarChart is an customized bar-chart library for android. It provides vertical and horizontal chart
+Add below dependency to build.gradle in app level
 
+	dependencies {
+	   compile 'me.ithebk:barchart:0.9'
+	}
+
+## Usage
 Developers can customize the following attributes in xml:
           
      <me.ithebk.barchart.BarChart
@@ -18,25 +34,9 @@ Developers can customize the following attributes in xml:
         barchart:bar_show_animation="true"
         android:layout_width="wrap_content"
         android:layout_height="150dp"/>
+        
+        
              
-Supported on API Level 10 and above.
-
-## Installation
-Add jcenter repository to build.gradle in Project Level
-	
-	repositories {
-		jcenter()
-	}
-
-Add below dependency to build.gradle in app level
-
-	dependencies {
-	   compile 'me.ithebk:barchart:0.9'
-	}
-
-## Screenshot
-
-<img src="/screenshot/barchartsample.gif" width="300" height="466">
 
 
 ## License
