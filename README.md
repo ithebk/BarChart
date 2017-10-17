@@ -23,15 +23,16 @@ Supported on API Level 10 and above.
 
 ## Installation
 Add jcenter repository to build.gradle in Project Level
-repositories {
-	jcenter()
-}
+	
+	repositories {
+		jcenter()
+	}
 
-Add dependency to build.gradle in app level
+Add below dependency to build.gradle in app level
 
-dependencies {
-   compile 'me.ithebk:barchart:0.9'
-}
+	dependencies {
+	   compile 'me.ithebk:barchart:0.9'
+	}
 
 ## Screenshot
 
