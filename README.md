@@ -1,7 +1,9 @@
 # BarChart
 [ ![Download](https://api.bintray.com/packages/ithebk/maven/Bar-Chart/images/download.svg) ](https://bintray.com/ithebk/maven/Bar-Chart/_latestVersion)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-<br/>The BarChart is an customized chart library for android. It provides vertical and horizontal bar chart.<br/>
+
+The BarChart is an customized chart library for android. It provides vertical and horizontal bar chart.
+
 <img src="/screenshot/barchartsample.gif" width="300" height="466">
 <br/>Supported on API Level 10 and above.
 ## Installation
