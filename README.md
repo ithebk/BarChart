@@ -5,6 +5,8 @@
 The BarChart is an customized chart library for android. It provides vertical and horizontal bar chart.
 
 <img src="/screenshot/barchartsample.gif" width="300" height="466">
+<img src="/screenshot/bar_chart_vert.gif" width="300" height="466">
+
 <br/>Supported on API Level 10 and above.
 
 ## Installation
