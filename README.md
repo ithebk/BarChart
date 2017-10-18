@@ -11,13 +11,13 @@ The BarChart is an customized chart library for android. It provides vertical an
 <br/>Supported on API Level 10 and above.
 
 ## Installation
-Add jcenter repository to build.gradle in Project Level
+Add jcenter repository to `build.gradle` in Project Level
 	
 	repositories {
 		jcenter()
 	}
 
-Add below dependency to build.gradle in app level
+Add below dependency to `build.gradle` in app level
 
 	dependencies {
 	   compile 'me.ithebk:barchart:0.9'
@@ -27,7 +27,7 @@ Add below dependency to build.gradle in app level
 First step is top add BarChart view to xml with required width and height.
 And you can customise the view by parameters.
 
-XML:
+#### XML:
 
  	<me.ithebk.barchart.BarChart
 	  android:id="@+id/bar_chart_vertical"
@@ -44,12 +44,12 @@ XML:
 	  android:layout_width="wrap_content"
 	  android:layout_height="150dp"/>
 	
-Java : 
+#### Java : 
 
 	BarChart barChart = (BarChart) findViewById(R.id.bar_chart_vertical);
 	barChart.setBarMaxValue(100);
 	
-ADD BAR:
+#### ADD BAR:
 
 	//Add single bar
 	BarChartModel barChartModel = new BarChartModel();
@@ -66,7 +66,7 @@ ADD BAR:
 	//populate bar array list and add to barchart as a list. 
 	barChart.addBar(barChartModelList);
 	
-GET BAR:
+#### GET BAR:
 	
 	//Return value is a list of BarChartModel
 	barchart.getBar();
@@ -75,7 +75,7 @@ GET BAR:
 	barchart.getBar(index);
 
 	
-UPDATE BAR : 
+#### UPDATE BAR : 
 	
 	BarChartModel barChartModelNew = new BarChartModel();
     barChartModelNew.setBarValue(70);
@@ -84,7 +84,7 @@ UPDATE BAR :
 	int index = 0;
    	barChart.updateBar(index,barChartModelNew);
 	
-REMOVE BAR :
+#### REMOVE BAR :
 
 	//To remove BarChartModel object from the list
 	barChart.removeBar(barChartModel);
@@ -92,7 +92,7 @@ REMOVE BAR :
 	//To remove BarChartModel object at the index from the list
 	barChart.removeBar(index);
 	
-ONCLICK LISTENER FOR BAR:
+#### ONCLICK LISTENER FOR BAR:
 
 	barChart.setOnBarClickListener(new BarChart.OnBarClickListener() {
             @Override
